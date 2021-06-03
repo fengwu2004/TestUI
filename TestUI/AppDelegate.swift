@@ -10,27 +10,59 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var window: UIWindow?
+    
+    var naviContoller:MTNavigationViewController!
+    
+    var timer:Timer!
 
-
+    func applicationWillResignActive(_ application: UIApplication) {
+        
+        EBLogAnalyticManager.sharedInstance().forceStoreLogs()
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        
+        EBLogAnalyticManager.sharedInstance().forceUpdateLogs()
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        setupWindow()
+        
+        EBLogAnalyticManager.sharedInstance().run()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { Timer in
+        
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
+                
+                EBLogAnalyticManager.sharedInstance().save(toLog: ["eventId":109, "msg":"登陆事件"])
+                
+//                print("log success")
+            }
+        }
+        
+        timer.fire()
+        
         return true
     }
-
-    // MARK: UISceneSession Lifecycle
-
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    
+    func setupWindow() -> Void {
+        
+        window = UIWindow()
+        
+        let vc = ViewController()
+        
+        naviContoller = MTNavigationViewController(rootViewController: vc)
+        
+        window?.rootViewController = naviContoller
+        
+        window?.makeKeyAndVisible()
     }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    
+    func test() -> Void {
+        
+        
     }
-
-
 }
 
