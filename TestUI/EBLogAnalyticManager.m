@@ -10,6 +10,7 @@
 #import "EBStoreManager.h"
 #import "EBThreadSafeArray.h"
 #include <zlib.h>
+#import "NSData+Compression.h"
 
 @interface EBLogAnalyticManager() <NSURLSessionDelegate>
 
@@ -65,7 +66,9 @@ static EBLogAnalyticManager *_instance = nil;
         
         _queue = dispatch_queue_create("ebscn_jyg_log_analytic_queue", DISPATCH_QUEUE_SERIAL);
         
-        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998"];
+        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
+        
+//        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/eventLogSystem/collect/jsonFile/upload?deviceId=1223"];
     }
     
     return self;
@@ -182,9 +185,26 @@ static EBLogAnalyticManager *_instance = nil;
     }];
 }
 
-- (NSData *)zipCompress:(NSData *)fileData {
+- (NSData *)compressData:(NSData *)data {
     
-    uLongf zipFileDataLen = [fileData length];
+    if (@available(iOS 13.0, *)) {
+
+        return [data compressedDataUsingAlgorithm:NSDataCompressionAlgorithmZlib error:nil];
+    }
+    
+    return [self zlibCompressData:data];
+}
+
+- (NSData *)zlibCompressData:(NSData *)data {
+    
+    if (data.length <= 0) {
+        
+        return nil;
+    }
+    
+    uLongf zipFileDataLen = [data length];
+    
+    zipFileDataLen = MAX(zipFileDataLen, compressBound(zipFileDataLen));
     
     Bytef *zipFileData = (Bytef *)malloc(zipFileDataLen);
     
@@ -194,7 +214,7 @@ static EBLogAnalyticManager *_instance = nil;
     }
     
     //压缩数据
-    int ret = compress(zipFileData, &zipFileDataLen, [fileData bytes], [fileData length]);
+    int ret = compress(zipFileData, &zipFileDataLen, [data bytes], [data length]);
     
     if (ret != Z_OK || zipFileDataLen == 0) {
         
@@ -214,41 +234,19 @@ static EBLogAnalyticManager *_instance = nil;
     return zipFileNSData;
 }
 
-- (NSData *)compressData:(NSData *)fileData {
-    
-    if (fileData.length <= 0) {
-        
-        return nil;
-    }
-    
-    if(@available(iOS 13.0, *)) {
-        
-        NSError *error = nil;
-        
-        NSData *resultData = [fileData compressedDataUsingAlgorithm:NSDataCompressionAlgorithmZlib error:&error];
-        
-        if (!error) {
-            
-            return resultData;
-        }
-        
-        return nil;
-    }
-    
-    return [self zipCompress:fileData];
-}
-
 - (void)doUpload:(NSData *)fileData success:(void(^)(id))success {
     
     [self uploadData:fileData success:success failure:nil];
-    
-//    [self mockUploadData:fileData success:success failure:nil];
 }
 
 - (void)compressAndUpload:(NSData *)fileData fileName:(NSString *)fileName {
     
-    NSData *zipData = [self compressData:fileData];
+    NSString *abcd = @"abcdabcdabcdabcd";
     
+    NSData *data = [abcd dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSData *zipData = [self compressData:data];
+        
     if (zipData.length <= 0) {
         
         return;

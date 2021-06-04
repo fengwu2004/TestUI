@@ -17,7 +17,8 @@
 		2C980D3726676F5C003B5611 /* EBLogAnalyticManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C980D3126676F5C003B5611 /* EBLogAnalyticManager.m */; };
 		2C980D3826676F5C003B5611 /* EBThreadSafeArray.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C980D3326676F5C003B5611 /* EBThreadSafeArray.mm */; };
 		2C980D3926676F5C003B5611 /* EBStoreManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C980D3526676F5C003B5611 /* EBStoreManager.mm */; };
-		2C980D3C26676FF8003B5611 /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C980D3B26676FE1003B5611 /* libz.1.2.5.tbd */; };
+		2C980E162668E0E2003B5611 /* libz.1.2.8.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C980E152668E0DB003B5611 /* libz.1.2.8.tbd */; };
+		2C980E192668E6BB003B5611 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C980E172668E6BB003B5611 /* NSData+Compression.m */; };
 		D6596F33873E7936C9683FAC /* Pods_TestUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94EDFA82D938B9185553D3B8 /* Pods_TestUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,9 @@
 		2C980D3526676F5C003B5611 /* EBStoreManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EBStoreManager.mm; sourceTree = "<group>"; };
 		2C980D3626676F5C003B5611 /* EBThreadSafeArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBThreadSafeArray.h; sourceTree = "<group>"; };
 		2C980D3B26676FE1003B5611 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		2C980E152668E0DB003B5611 /* libz.1.2.8.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.8.tbd; path = usr/lib/libz.1.2.8.tbd; sourceTree = SDKROOT; };
+		2C980E172668E6BB003B5611 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
+		2C980E182668E6BB003B5611 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
 		94EDFA82D938B9185553D3B8 /* Pods_TestUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D62234360C8FEB718E98787A /* Pods-TestUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestUI.debug.xcconfig"; path = "Target Support Files/Pods-TestUI/Pods-TestUI.debug.xcconfig"; sourceTree = "<group>"; };
 		FDFB78F03C144EFC478CC45E /* Pods-TestUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestUI.release.xcconfig"; path = "Target Support Files/Pods-TestUI/Pods-TestUI.release.xcconfig"; sourceTree = "<group>"; };
@@ -49,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C980D3C26676FF8003B5611 /* libz.1.2.5.tbd in Frameworks */,
+				2C980E162668E0E2003B5611 /* libz.1.2.8.tbd in Frameworks */,
 				D6596F33873E7936C9683FAC /* Pods_TestUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,6 +106,8 @@
 				2C980D3626676F5C003B5611 /* EBThreadSafeArray.h */,
 				2C980D3326676F5C003B5611 /* EBThreadSafeArray.mm */,
 				2C980D3026676F5C003B5611 /* TestUI-Bridging-Header.h */,
+				2C980E182668E6BB003B5611 /* NSData+Compression.h */,
+				2C980E172668E6BB003B5611 /* NSData+Compression.m */,
 			);
 			path = TestUI;
 			sourceTree = "<group>";
@@ -109,6 +115,7 @@
 		2C980D3A26676FE0003B5611 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C980E152668E0DB003B5611 /* libz.1.2.8.tbd */,
 				2C980D3B26676FE1003B5611 /* libz.1.2.5.tbd */,
 				94EDFA82D938B9185553D3B8 /* Pods_TestUI.framework */,
 			);
@@ -237,6 +244,7 @@
 				2C31FCD026577C340089EA18 /* ViewController.swift in Sources */,
 				2C980D3726676F5C003B5611 /* EBLogAnalyticManager.m in Sources */,
 				2C31FCCC26577C340089EA18 /* AppDelegate.swift in Sources */,
+				2C980E192668E6BB003B5611 /* NSData+Compression.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
