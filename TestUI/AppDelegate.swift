@@ -45,9 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         setupWindow()
         
-        EBUncaughtExceptionHandler.installUncaughtExceptionHandler()
+//        EBUncaughtExceptionHandler.run()
     
-        TestManager.test()
+//        TestManager.test()
+        
+        testLogs()
         
         return true
     }

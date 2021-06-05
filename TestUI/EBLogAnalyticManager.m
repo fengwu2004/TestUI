@@ -11,6 +11,8 @@
 #import "EBThreadSafeArray.h"
 #include <zlib.h>
 #import "NSData+Compression.h"
+#import "EBHttpNetwork.h"
+#import "EBJSON.h"
 
 @interface EBLogAnalyticManager() <NSURLSessionDelegate>
 
@@ -313,6 +315,42 @@ static EBLogAnalyticManager *_instance = nil;
     return dic;
 }
 
+- (void)onResponse:(NSData *)data success:(void(^)(id obj))success failure:(void(^)(NSError *error))failure {
+    
+    NSDictionary *result = [EBJSON dictionaryWithData:data];
+    
+    if (!result) {
+        
+        if (failure) {
+            
+            failure([NSError errorWithDomain:@"发送失败, 无返回数据" code:-1 userInfo:nil]);
+        }
+        
+        return;
+    }
+    
+    NSInteger code = [[result objectForKey:@"code"] integerValue];
+    
+    NSString *msg = [result objectForKey:@"msg"];
+    
+    if (code == 0) {
+        
+        if (success) {
+            
+            success(data);
+        }
+    }
+    else {
+        
+        if (failure) {
+         
+            NSString *str = [NSString stringWithFormat:@"upload fail: ---code:%ld---message:%@---",(long)code, msg];
+            
+            failure([NSError errorWithDomain:str code:-1 userInfo:nil]);
+        }
+    }
+}
+
 - (void)uploadData:(NSData *)data success:(void(^)(id obj))success failure:(void(^)(NSError *error))failure {
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_uploadUrl];
@@ -320,65 +358,21 @@ static EBLogAnalyticManager *_instance = nil;
     request.HTTPMethod = @"POST";
     
     request.timeoutInterval = 60;
-        
-    NSString *boundary = @"-----WebKitFormBoundary7MA4YWxkTrZu0gW";
     
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
-    
-    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    
-    // http body
-    NSMutableData *body = [NSMutableData data];
-    
-    NSMutableString *headerString = [NSMutableString stringWithFormat:@"\r\n--%@\r\n", boundary];
-    
-    NSString *type = [NSString stringWithFormat:@"Content-Disposition: form-data;name=\"%@\"; filename=\"%@\"\r\n", @"file", @"logFiles"];
-    
-    [headerString appendString:type];
-    
-    [headerString appendFormat:@"Content-Type: application/octet-stream\r\n\r\n"];
-    
-    [body appendData:[headerString dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [body appendData:data];
-    
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        
-    request.HTTPBody = body;
-    
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-        
-    NSURLSessionTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable respData, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        NSString *responseString = [[NSString alloc] initWithData:respData encoding:NSUTF8StringEncoding];
-        
-        NSDictionary *responseDict = [self dicFromJsonStr:responseString];
-        
-        NSLog(@"%@", responseDict);
-        
-        if (error) {
+    [[EBHttpNetwork sharedInstance] postFormData:data serverFile:@"logs" request:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             
-            NSLog(@"上传失败 %@", error);
+        if (!error) {
+            
+            [self onResponse:data success:success failure:failure];
+        }
+        else {
             
             if (failure) {
                 
                 failure(error);
             }
         }
-        else {
-            
-            NSLog(@"上传成功");
-            
-            if (success) {
-                
-                success(response);
-            }
-        }
     }];
-    
-    [task resume];
 }
 
 - (NSArray<NSString *> *)allFileNamesThatWaitUpload {

@@ -12,7 +12,7 @@
 
 @interface EBUncaughtExceptionHandler : NSObject
 
-+ (void)installUncaughtExceptionHandler;
++ (void)run;
 
 + (void)uploadCrashLogFile;
 

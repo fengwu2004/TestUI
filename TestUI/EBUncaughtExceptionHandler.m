@@ -9,6 +9,8 @@
 #include <libkern/OSAtomic.h>
 #include <execinfo.h>
 #import "EBStoreManager.h"
+#import "EBHttpNetwork.h"
+#import "EBJSON.h"
 
 NSString * const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
 NSString * const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
@@ -41,7 +43,7 @@ NSString* getAppInfo(void) {
 
 @implementation EBUncaughtExceptionHandler
 
-+ (void)installUncaughtExceptionHandler {
++ (void)run {
     
     NSSetUncaughtExceptionHandler(HandleException);
     
@@ -58,6 +60,46 @@ NSString* getAppInfo(void) {
     signal(SIGPIPE, SIG_IGN);// 该信号忽略以减少闪退几率
 }
 
++ (NSURLRequest *)request {
+    
+    NSURL *uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:uploadUrl];
+    
+    request.HTTPMethod = @"POST";
+    
+    request.timeoutInterval = 60;
+    
+    return request;
+}
+
++ (void)onResponse:(NSData *)data fileName:(NSString *)fileName {
+    
+    NSDictionary *result = [EBJSON dictionaryWithData:data];
+    
+    if (!result) {
+        
+        NSLog(@"upload fail: %@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
+        
+        return;
+    }
+        
+    NSInteger code = [[result objectForKey:@"code"] integerValue];
+    
+    NSString *msg = [result objectForKey:@"msg"];
+    
+    if (code == 0 && [msg isEqualToString:@"SUCCESS"]) {
+        
+        NSLog(@"upload success: %@", fileName);
+        
+        [self removeCrashFile:fileName];
+    }
+    else {
+        
+        NSLog(@"upload fail: ---code:%ld---message:%@---",(long)code, msg);
+    }
+}
+
 + (void)uploadCrashLogFile {
     
     NSArray<NSString *> *fileList = [[[EBStoreManager sharedInstance] fileListOfPath:EBPathKey_SystemCrashFile] copy];
@@ -66,29 +108,23 @@ NSString* getAppInfo(void) {
         
         NSData *fileData = [[EBStoreManager sharedInstance] fileData:EBPathKey_SystemCrashFile fileName:fileName];
         
-        
+        [[EBHttpNetwork sharedInstance] postFormData:fileData serverFile:@"crash" request:self.request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    
+            if (!error) {
+                
+                [self onResponse:data fileName:fileName];
+            }
+            else {
+                
+                NSLog(@"upload error: %@", error.localizedDescription);
+            }
+        }];
     }
 }
 
-+ (void)removeCrashFile:(NSString *)path {
++ (void)removeCrashFile:(NSString *)fileName {
     
-    BOOL fileExists = NO;
-    
-    BOOL isDirectory = NO;
-    
-    fileExists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
-    
-    if (fileExists && !isDirectory) {
-        
-        NSError *error = nil;
-        
-        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
-        
-        if (error) {
-            
-            NSLog(@"删除崩溃文件出错");
-        }
-    }
+    [[EBStoreManager sharedInstance] removeFile:EBPathKey_SystemCrashFile fileName:fileName];
 }
 
 //获取调用堆栈

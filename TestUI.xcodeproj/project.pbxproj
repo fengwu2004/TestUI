@@ -10,6 +10,7 @@
 		2C214186266A121D001EE3C5 /* EBUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C214185266A121D001EE3C5 /* EBUncaughtExceptionHandler.m */; };
 		2C214189266B21FD001EE3C5 /* TestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C214188266B21FD001EE3C5 /* TestManager.m */; };
 		2C21418C266B2A60001EE3C5 /* EBHttpNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */; };
+		2C21418F266B3080001EE3C5 /* EBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21418D266B3080001EE3C5 /* EBJSON.m */; };
 		2C31FCCC26577C340089EA18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C31FCCB26577C340089EA18 /* AppDelegate.swift */; };
 		2C31FCD026577C340089EA18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C31FCCF26577C340089EA18 /* ViewController.swift */; };
 		2C31FCD526577C3A0089EA18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C31FCD426577C3A0089EA18 /* Assets.xcassets */; };
@@ -32,6 +33,8 @@
 		2C214188266B21FD001EE3C5 /* TestManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestManager.m; sourceTree = "<group>"; };
 		2C21418A266B2A60001EE3C5 /* EBHttpNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EBHttpNetwork.h; sourceTree = "<group>"; };
 		2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EBHttpNetwork.m; sourceTree = "<group>"; };
+		2C21418D266B3080001EE3C5 /* EBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBJSON.m; sourceTree = "<group>"; };
+		2C21418E266B3080001EE3C5 /* EBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBJSON.h; sourceTree = "<group>"; };
 		2C31FCC826577C340089EA18 /* TestUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C31FCCB26577C340089EA18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C31FCCF26577C340089EA18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -123,6 +126,8 @@
 				2C214188266B21FD001EE3C5 /* TestManager.m */,
 				2C21418A266B2A60001EE3C5 /* EBHttpNetwork.h */,
 				2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */,
+				2C21418E266B3080001EE3C5 /* EBJSON.h */,
+				2C21418D266B3080001EE3C5 /* EBJSON.m */,
 			);
 			path = TestUI;
 			sourceTree = "<group>";
@@ -263,6 +268,7 @@
 				2C980E192668E6BB003B5611 /* NSData+Compression.m in Sources */,
 				2C21418C266B2A60001EE3C5 /* EBHttpNetwork.m in Sources */,
 				2C214189266B21FD001EE3C5 /* TestManager.m in Sources */,
+				2C21418F266B3080001EE3C5 /* EBJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
