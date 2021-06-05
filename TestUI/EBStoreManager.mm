@@ -118,6 +118,7 @@ static EBStoreManager *_instance = nil;
         _pathSettings = @{
             
             @(EBPathKey_SystemLogFile):[EBPathSetting pathFrom:@"/systemlog/" fileName:nil],
+            @(EBPathKey_SystemCrashFile):[EBPathSetting pathFrom:@"/systemcreash/" fileName:nil],
         };
     }
     
@@ -134,9 +135,57 @@ static EBStoreManager *_instance = nil;
     return [NSJSONSerialization dataWithJSONObject:obj options:NSJSONWritingPrettyPrinted error:nil];
 }
 
-- (void)saveToPath:(EBPathKey)path fileName:(NSString *)fileName array:(NSArray *)array {
+- (void)appendToPath:(EBPathKey)path fileName:(NSString *)fileName data:(NSData *)data {
     
-    NSData *data = [self jsonStrWithObj:array];
+    if (data.length <= 0) {
+        
+        return;
+    }
+    
+    EBPathSetting *pathSetting = _pathSettings[@(path)];
+    
+    if (!pathSetting) {
+        
+        return;
+    }
+    
+    NSString *absPath = [pathSetting absPath];
+    
+    if (![pathSetting isDirectory]) {
+        
+        return;
+    }
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:absPath withIntermediateDirectories:YES attributes:nil error:nil];
+        
+    NSString *filePath = [absPath stringByAppendingString:fileName];
+    
+    std::lock_guard<std::mutex> lk(pathSetting->mux);
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        
+        NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+        
+        [fileHandle seekToEndOfFile];
+        
+        [fileHandle writeData:data];
+        
+        [fileHandle closeFile];
+    }
+    else {
+        
+        if ([data writeToFile:filePath atomically:YES]) {
+            
+            NSLog(@"写入成功 %@", filePath);
+        }
+        else {
+            
+            NSLog(@"写入失败 %@", filePath);
+        }
+    }
+}
+
+- (void)saveToPath:(EBPathKey)path fileName:(NSString *)fileName data:(NSData *)data {
     
     EBPathSetting *pathSetting = _pathSettings[@(path)];
     
@@ -160,12 +209,19 @@ static EBStoreManager *_instance = nil;
     
     if ([data writeToFile:filePath atomically:YES]) {
         
-//        NSLog(@"写入成功 %@", filePath);
+        NSLog(@"写入成功 %@", filePath);
     }
     else {
         
-//        NSLog(@"写入失败 %@", filePath);
+        NSLog(@"写入失败 %@", filePath);
     }
+}
+
+- (void)saveToPath:(EBPathKey)path fileName:(NSString *)fileName array:(NSArray *)array {
+    
+    NSData *data = [self jsonStrWithObj:array];
+    
+    [self saveToPath:path fileName:fileName data:data];
 }
 
 - (NSArray<NSString *> *)fileListOfPath:(EBPathKey)path {

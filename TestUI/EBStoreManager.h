@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef NS_ENUM(NSInteger, EBPathKey) {
     
     EBPathKey_SystemLogFile,
+    EBPathKey_SystemCrashFile,
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -33,6 +34,10 @@ typedef NS_ENUM(NSInteger, EBPathKey) {
 + (id)sharedInstance;
 
 - (void)saveToPath:(EBPathKey)path fileName:(NSString *)fileName array:(NSArray *)array;
+
+- (void)saveToPath:(EBPathKey)path fileName:(NSString *)fileName data:(NSData *)data;
+
+- (void)appendToPath:(EBPathKey)path fileName:(NSString *)fileName data:(NSData *)data;
 
 - (void)removeFile:(EBPathKey)path fileName:(NSString *)fileName;
 

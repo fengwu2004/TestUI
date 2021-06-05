@@ -67,8 +67,6 @@ static EBLogAnalyticManager *_instance = nil;
         _queue = dispatch_queue_create("ebscn_jyg_log_analytic_queue", DISPATCH_QUEUE_SERIAL);
         
         _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
-        
-//        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/eventLogSystem/collect/jsonFile/upload?deviceId=1223"];
     }
     
     return self;
@@ -187,11 +185,6 @@ static EBLogAnalyticManager *_instance = nil;
 
 - (NSData *)compressData:(NSData *)data {
     
-    if (@available(iOS 13.0, *)) {
-
-        return [data compressedDataUsingAlgorithm:NSDataCompressionAlgorithmZlib error:nil];
-    }
-    
     return [self zlibCompressData:data];
 }
 
@@ -241,12 +234,8 @@ static EBLogAnalyticManager *_instance = nil;
 
 - (void)compressAndUpload:(NSData *)fileData fileName:(NSString *)fileName {
     
-    NSString *abcd = @"abcdabcdabcdabcd";
+    NSData *zipData = [self compressData:fileData];
     
-    NSData *data = [abcd dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSData *zipData = [self compressData:data];
-        
     if (zipData.length <= 0) {
         
         return;
@@ -316,10 +305,10 @@ static EBLogAnalyticManager *_instance = nil;
 - (NSDictionary *)dicFromJsonStr:(NSString *)str {
     
     NSData *jsonData = [str dataUsingEncoding:NSUTF8StringEncoding];
+    
     NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                        options:NSJSONReadingMutableContainers
-                                                          error:&err];
+    
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
     
     return dic;
 }

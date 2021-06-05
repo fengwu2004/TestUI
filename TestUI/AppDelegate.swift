@@ -26,9 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         EBLogAnalyticManager.sharedInstance().forceUpdateLogs()
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        setupWindow()
+    func testLogs() -> Void {
         
         EBLogAnalyticManager.sharedInstance().run()
         
@@ -37,12 +35,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                 
                 EBLogAnalyticManager.sharedInstance().save(toLog: ["eventId":109, "msg":"登陆事件"])
-                
-//                print("log success")
             }
         }
         
         timer.fire()
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        setupWindow()
+        
+        EBUncaughtExceptionHandler.installUncaughtExceptionHandler()
+    
+        TestManager.test()
         
         return true
     }
