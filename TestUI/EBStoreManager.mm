@@ -209,11 +209,11 @@ static EBStoreManager *_instance = nil;
     
     if ([data writeToFile:filePath atomically:YES]) {
         
-        NSLog(@"写入成功 %@", filePath);
+//        NSLog(@"写入成功 %@", filePath);
     }
     else {
         
-        NSLog(@"写入失败 %@", filePath);
+//        NSLog(@"写入失败 %@", filePath);
     }
 }
 

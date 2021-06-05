@@ -177,11 +177,18 @@ static EBLogAnalyticManager *_instance = nil;
 
 - (void)uploadLogs {
     
+    __block NSInteger i = 0;
+    
     [_logFiles forEach:^(NSString *fileName) {
-            
+        
+        ++i;
+        
         NSData *fileData = [[EBStoreManager sharedInstance] fileData:EBPathKey_SystemLogFile fileName:fileName];
         
-        [self compressAndUpload:fileData fileName:fileName];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(i/60.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [self compressAndUpload:fileData fileName:fileName];
+        });
     }];
 }
 
