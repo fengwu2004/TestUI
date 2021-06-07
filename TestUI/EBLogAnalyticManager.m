@@ -23,6 +23,8 @@
 
 @property(nonatomic) NSURL *uploadUrl;
 
+@property(nonatomic) NSDateFormatter *dateFormatter;
+
 @end
 
 @implementation EBLogAnalyticManager
@@ -69,6 +71,11 @@ static EBLogAnalyticManager *_instance = nil;
         _queue = dispatch_queue_create("ebscn_jyg_log_analytic_queue", DISPATCH_QUEUE_SERIAL);
         
         _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
+        
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        
+        [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        
     }
     
     return self;
@@ -163,13 +170,20 @@ static EBLogAnalyticManager *_instance = nil;
 
 - (NSDate *)getFileDate:(NSString *)fileName formatter:(NSDateFormatter *)formatter {
     
-    NSRange range = [fileName rangeOfString:@".txt"];
+    NSString *fileExtension = [[EBStoreManager sharedInstance] fileExtensionOf:EBPathKey_SystemLogFile];
+    
+    if (fileExtension.length <= 1) {
+    
+        return [formatter dateFromString:fileName];
+    }
+        
+    NSRange range = [fileName rangeOfString:fileExtension];
     
     if (range.location == NSNotFound) {
         
         return nil;
     }
-    
+
     NSString *date = [fileName substringWithRange:NSMakeRange(0, range.location)];
     
     return [formatter dateFromString:date];
@@ -270,11 +284,19 @@ static EBLogAnalyticManager *_instance = nil;
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (void)saveToLog:(NSDictionary *)dic {
+- (void)saveLog:(NSDictionary *)dic {
+
+    NSString *time = [_dateFormatter stringFromDate:[NSDate date]];
+    
+    NSDictionary *otherInfo = @{@"timeStamp":time};
+    
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:dic];
+    
+    [dict addEntriesFromDictionary:otherInfo];
     
     dispatch_async(_queue, ^{
         
-        [self.logsArray addObject:dic];
+        [self.logsArray addObject:dict];
         
         if (self.logsArray.count > 50) {
             
@@ -293,7 +315,9 @@ static EBLogAnalyticManager *_instance = nil;
     
     NSDate *now = [NSDate date];
     
-    NSString *fileName = [NSString stringWithFormat:@"%@.txt", [dateFormatter stringFromDate:now]];
+    NSString *fileExtension = [[EBStoreManager sharedInstance] fileExtensionOf:EBPathKey_SystemLogFile];
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@%@", [dateFormatter stringFromDate:now], fileExtension];
     
     [[EBStoreManager sharedInstance] saveToPath:EBPathKey_SystemLogFile fileName:fileName array:_logsArray];
     

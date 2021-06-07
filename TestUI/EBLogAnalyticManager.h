@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)run;
 
-- (void)saveToLog:(NSDictionary *)dic;
+- (void)saveLog:(NSDictionary *)dic;
 
 - (void)forceStoreLogs;
 

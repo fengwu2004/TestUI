@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
             DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                 
-                EBLogAnalyticManager.sharedInstance().save(toLog: ["eventId":109, "msg":"登陆事件"])
+                EBLogAnalyticManager.sharedInstance().saveLog(["eventId":105456, "msg":"登陆事件"])
             }
         }
         
@@ -45,9 +45,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         setupWindow()
         
-//        EBUncaughtExceptionHandler.run()
+        EBUncaughtExceptionHandler.run()
     
-//        TestManager.test()
+        TestManager.test()
         
         testLogs()
         

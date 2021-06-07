@@ -11,6 +11,8 @@
 		2C214189266B21FD001EE3C5 /* TestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C214188266B21FD001EE3C5 /* TestManager.m */; };
 		2C21418C266B2A60001EE3C5 /* EBHttpNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */; };
 		2C21418F266B3080001EE3C5 /* EBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21418D266B3080001EE3C5 /* EBJSON.m */; };
+		2C214312266DC1B3001EE3C5 /* EBCyptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C214311266DC1B3001EE3C5 /* EBCyptor.m */; };
+		2C2143F3266DF1F8001EE3C5 /* EBLogEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C2143F2266DF1F8001EE3C5 /* EBLogEvent.m */; };
 		2C31FCCC26577C340089EA18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C31FCCB26577C340089EA18 /* AppDelegate.swift */; };
 		2C31FCD026577C340089EA18 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C31FCCF26577C340089EA18 /* ViewController.swift */; };
 		2C31FCD526577C3A0089EA18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C31FCD426577C3A0089EA18 /* Assets.xcassets */; };
@@ -35,6 +37,10 @@
 		2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EBHttpNetwork.m; sourceTree = "<group>"; };
 		2C21418D266B3080001EE3C5 /* EBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EBJSON.m; sourceTree = "<group>"; };
 		2C21418E266B3080001EE3C5 /* EBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBJSON.h; sourceTree = "<group>"; };
+		2C214310266DC1B3001EE3C5 /* EBCyptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EBCyptor.h; sourceTree = "<group>"; };
+		2C214311266DC1B3001EE3C5 /* EBCyptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EBCyptor.m; sourceTree = "<group>"; };
+		2C2143F1266DF1F8001EE3C5 /* EBLogEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EBLogEvent.h; sourceTree = "<group>"; };
+		2C2143F2266DF1F8001EE3C5 /* EBLogEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EBLogEvent.m; sourceTree = "<group>"; };
 		2C31FCC826577C340089EA18 /* TestUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C31FCCB26577C340089EA18 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C31FCCF26577C340089EA18 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +134,10 @@
 				2C21418B266B2A60001EE3C5 /* EBHttpNetwork.m */,
 				2C21418E266B3080001EE3C5 /* EBJSON.h */,
 				2C21418D266B3080001EE3C5 /* EBJSON.m */,
+				2C214310266DC1B3001EE3C5 /* EBCyptor.h */,
+				2C214311266DC1B3001EE3C5 /* EBCyptor.m */,
+				2C2143F1266DF1F8001EE3C5 /* EBLogEvent.h */,
+				2C2143F2266DF1F8001EE3C5 /* EBLogEvent.m */,
 			);
 			path = TestUI;
 			sourceTree = "<group>";
@@ -257,7 +267,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2143F3266DF1F8001EE3C5 /* EBLogEvent.m in Sources */,
 				2C3C44AF265B77E6006FE3FD /* AViewController.swift in Sources */,
+				2C214312266DC1B3001EE3C5 /* EBCyptor.m in Sources */,
 				2C980D3926676F5C003B5611 /* EBStoreManager.mm in Sources */,
 				2C214186266A121D001EE3C5 /* EBUncaughtExceptionHandler.m in Sources */,
 				2C980D3826676F5C003B5611 /* EBThreadSafeArray.mm in Sources */,

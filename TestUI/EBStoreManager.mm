@@ -7,6 +7,7 @@
 //
 
 #import "EBStoreManager.h"
+#import "EBCyptor.h"
 #include <mutex>
 
 @interface EBPathSetting() {
@@ -27,6 +28,8 @@
     setting.path = path;
     
     setting.fileName = fileName;
+    
+    setting.ciperType = EBStoreCiperType_RC4;
     
     return setting;
 }
@@ -77,6 +80,7 @@
 
 @end
 
+#define EBMakePathSetting(path, name) [EBPathSetting pathFrom:(path) fileName:(name)]
 
 @implementation EBStoreManager
 
@@ -116,9 +120,9 @@ static EBStoreManager *_instance = nil;
     if (self) {
         
         _pathSettings = @{
-            
-            @(EBPathKey_SystemLogFile):[EBPathSetting pathFrom:@"/systemlog/" fileName:nil],
-            @(EBPathKey_SystemCrashFile):[EBPathSetting pathFrom:@"/systemcreash/" fileName:nil],
+                        
+            @(EBPathKey_SystemLogFile): EBMakePathSetting(@"/systemlog/", nil),
+            @(EBPathKey_SystemCrashFile): EBMakePathSetting(@"/systemcreash/", nil),
         };
     }
     
@@ -133,6 +137,26 @@ static EBStoreManager *_instance = nil;
     }
     
     return [NSJSONSerialization dataWithJSONObject:obj options:NSJSONWritingPrettyPrinted error:nil];
+}
+
+- (NSData *)dateByCiper:(EBStoreCiperType)ciperType data:(NSData *)data {
+    
+    if (ciperType == EBStoreCiperType_RC4) {
+        
+        return [EBCyptor ciperWithRC4:data];
+    }
+    
+    return data;
+}
+
+- (NSData *)dateByDeciper:(EBStoreCiperType)ciperType data:(NSData *)data {
+    
+    if (ciperType == EBStoreCiperType_RC4) {
+        
+        return [EBCyptor deciperWithRC4:data];
+    }
+    
+    return data;
 }
 
 - (void)appendToPath:(EBPathKey)path fileName:(NSString *)fileName data:(NSData *)data {
@@ -204,16 +228,18 @@ static EBStoreManager *_instance = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:absPath withIntermediateDirectories:YES attributes:nil error:nil];
         
     NSString *filePath = [absPath stringByAppendingString:fileName];
+    
+    NSData *ciperData = [self dateByCiper:pathSetting.ciperType data:data];
         
     std::lock_guard<std::mutex> lk(pathSetting->mux);
     
-    if ([data writeToFile:filePath atomically:YES]) {
+    if ([ciperData writeToFile:filePath atomically:YES]) {
         
-//        NSLog(@"写入成功 %@", filePath);
+        NSLog(@"写入成功 %@", filePath);
     }
     else {
         
-//        NSLog(@"写入失败 %@", filePath);
+        NSLog(@"写入失败 %@", filePath);
     }
 }
 
@@ -272,7 +298,9 @@ static EBStoreManager *_instance = nil;
         return nil;
     }
     
-    return [NSData dataWithContentsOfFile:filePath];
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    
+    return [self dateByDeciper:pathSetting.ciperType data:data];
 }
 
 - (void)removeFile:(EBPathKey)path fileName:(NSString *)fileName {
@@ -298,6 +326,23 @@ static EBStoreManager *_instance = nil;
     std::lock_guard<std::mutex> lk(pathSetting->mux);
     
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+}
+
+- (NSString *)fileExtensionOf:(EBPathKey)path {
+    
+    EBPathSetting *pathSetting = _pathSettings[@(path)];
+    
+    if (!pathSetting) {
+        
+        return nil;
+    }
+    
+    if (pathSetting.ciperType == EBStoreCiperType_RC4) {
+        
+        return @".c1";
+    }
+    
+    return nil;
 }
 
 @end

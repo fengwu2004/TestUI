@@ -17,13 +17,19 @@ typedef NS_ENUM(NSInteger, EBPathKey) {
     EBPathKey_SystemCrashFile,
 };
 
+typedef NS_ENUM(NSInteger, EBStoreCiperType) {
+    
+    EBStoreCiperType_RC4 = 1, //default
+};
+
 //----------------------------------------------------------------------------------------------------------
 @interface EBPathSetting : NSObject
 
 @property(nonatomic, copy) NSString *path;
 @property(nonatomic, copy) NSString *fileName;
+@property(nonatomic) EBStoreCiperType ciperType;
 
-+ (id)pathFrom:(NSString *)path fileName:(NSString *)fileName;
++ (id)pathFrom:(NSString *)path fileName:(nullable NSString *)fileName;
 
 @end
 
@@ -44,6 +50,8 @@ typedef NS_ENUM(NSInteger, EBPathKey) {
 - (NSData *)fileData:(EBPathKey)path fileName:(NSString *)fileName;
 
 - (NSArray<NSString *> *)fileListOfPath:(EBPathKey)path;
+
+- (NSString *)fileExtensionOf:(EBPathKey)pathKey;
 
 
 @end
