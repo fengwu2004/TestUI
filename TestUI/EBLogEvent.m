@@ -13,16 +13,18 @@
 
 + (NSDictionary *)typeDict {
     
+    static dispatch_once_t onceToken;
+    
     static NSDictionary *dic = nil;
     
-    if (!dic) {
+    dispatch_once(&onceToken, ^{
         
         dic = @{
             @(kApplicationDidFinishLaunchingEventId): EBMakeLogEvent(30000001, @"app启动"),
             @(kApplicationWillEnterForeground): EBMakeLogEvent(30000002, @"app进前台"),
             @(kApplicationDidEnterBackground): EBMakeLogEvent(30000003, @"app进后台"),
         };
-    }
+    });
     
     return dic;
 }
