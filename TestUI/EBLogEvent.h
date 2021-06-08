@@ -11,81 +11,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, EBLogEventType) {
     
+    //系统信息
     kApplicationDidFinishLaunchingEventId,          //app启动
-    
     kApplicationWillEnterForeground,                //app进前台
+    kApplicationDidEnterBackground,                 //app进后台
+    kConnectQuotationEventId,                       //连接行情通道
+    kNegotiateQuotationEventId,                     //协商行情通道
+    kConnectBusinessEventId,                        //连接业务通道
+    kNegotiateBusinessEventId,                      //协商业务通道
+    kConnectTradeEventId,                           //连接交易通道
+    kNegotiateTradeEventId,                         //协商交易通道
+    kGetAddressListEventId,                         //获取地址列表
+    kSendPacketFailedWithClientErrorEventId,        //因客户端原因导致发包失败
+    kNetworkStateSwitchEventId,                     //网络状态切换
+    kPingTimeoutEventId,                            //ping超时
+    kKeepAliveFailedEventId,                        //保活失败
+    kGetVerificationCodeFailedEventId,              //手机验证码接口请求失败
+    kSocketEventId,                                 //底层socket信息
     
-    kApplicationDidEnterBackground, //app进后台
-    
-    kConnectQuotationEventId,   //连接行情通道
-    
-    kNegotiateQuotationEventId, //协商行情通道
-    
-    kConnectBusinessEventId,    //连接业务通道
-    
-    kNegotiateBusinessEventId,  //协商业务通道
-    
-    kConnectTradeEventId,       //连接交易通道
-    
-    kNegotiateTradeEventId,     //协商交易通道
-    
-    kGetAddressListEventId,     //获取地址列表
-    
-    kSendPacketFailedWithClientErrorEventId,    //因客户端原因导致发包失败
-    
-    kNetworkStateSwitchEventId,                 //网络状态切换
-    
-    kPingTimeoutEventId,                        //ping超时
-    
-    kKeepAliveFailedEventId, //保活失败
-    
-    kGetVerificationCodeFailedEventId, //手机验证码接口请求失败
-    
-    kSocketEventId,//底层socket信息
-    /// 3000024 统一下载服务信息
-    kUniversalDownloadServiceEventId,
-    /// 3000025 增强行情通道断开
-    kEnhancedQuotationDisconnectEventId,
-    /// 3000026 H5页面加载失败
-    kH5FileDidFailLoadEventId,
-    /// 3000027 获取token失败
-    kGetTokenFailedEventId,
-    /// 3000028 是否打开APNs
-    kOpenAPNsEventId,
-    /// 3000029 App运行时长
-    kRunningTimeLenEventId,
-    /// 3000030 使用流量
-    kNetworkDataTrafficEventId,
-    /// 3000031 ping
-    kPingEventId,
-    /// 3000032 隐私信息收集
-    kAppPrivacyPolicyEventId,
-    /// 3000035 网络请求失败
-    kRequestFailedEventId,
-    /// 3000039 iOS内存警告
-    kMemoryWarningEventId,
-    /**
-     *  推送
-     */
-    /// 3000200 APNS消息点击
-    kClickAPNSMessageEventId,
-    /// 3000201 Socket消息点击
-    kClickSocketMessageEventId,
+    //http请求
+    kGetTokenFailedEventId,                         //获取token失败
+    kOpenAPNsEventId,                               //是否打开APNs
+    kClickAPNSMessageEventId,                       //APNS消息点击
+    kRunningTimeLenEventId,                         //App运行时长
+    kNetworkDataTrafficEventId,                     //使用流量
+    kPingEventId,                                   //ping
+    kAppPrivacyPolicyEventId,                       //隐私信息收集
+    kRequestFailedEventId,                          //网络请求失败
+    kMemoryWarningEventId,                          //iOS内存警告
+
     /**
      *  交易登录
      */
     /// 3000800 登录
     kLoginInfoEventId,
-    /// 3000801 在线时长修改
-    kOnlineIntervelSettingEventId,
-    /// 3000802 立即开户
-    kOpenAccountImmediatelyEventId,
-    /// 3000803 客服热线
-    kCustomerServiceHotlineEventId,
-    /// 3000804 删除历史账号
-    kDeleteAccountEventId,
-    /// 3000805 passportId获取失败的原因
-    kPassportIDGetFailedEventId,
     /*
      *  交易委托买卖
      */
