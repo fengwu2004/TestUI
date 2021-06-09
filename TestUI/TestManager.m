@@ -25,6 +25,18 @@
     NSData *deciperData = [EBCyptor deciperWithRC4:ciperData];
     
     NSLog(@"%@", deciperData);
+    
+    NSLog(@"%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"]);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSArray *array = @[];
+            
+            NSLog(@"%@", array[1]);
+        });
+    });
 }
 
 @end

@@ -11,6 +11,7 @@
 #import "EBStoreManager.h"
 #import "EBHttpNetwork.h"
 #import "EBJSON.h"
+#include <zlib.h>
 
 NSString * const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
 NSString * const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
@@ -62,7 +63,7 @@ NSString* getAppInfo(void) {
 
 + (NSURLRequest *)request {
     
-    NSURL *uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
+    NSURL *uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/eventLogSystem/collect/file/upload2?deviceId=001&compress=zip&deviceType=ios&deviceVs=6.0.4.1"];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:uploadUrl];
     
@@ -88,7 +89,7 @@ NSString* getAppInfo(void) {
     
     NSString *msg = [result objectForKey:@"msg"];
     
-    if (code == 0 && [msg isEqualToString:@"SUCCESS"]) {
+    if (code == 0) {
         
         NSLog(@"upload success: %@", fileName);
         
@@ -100,6 +101,45 @@ NSString* getAppInfo(void) {
     }
 }
 
++ (NSData *)zlibCompressData:(NSData *)data {
+    
+    if (data.length <= 0) {
+        
+        return nil;
+    }
+    
+    uLongf zipFileDataLen = [data length];
+    
+    zipFileDataLen = MAX(zipFileDataLen, compressBound(zipFileDataLen));
+    
+    Bytef *zipFileData = (Bytef *)malloc(zipFileDataLen);
+    
+    if (zipFileData == NULL) {
+        
+        return nil;
+    }
+    
+    //压缩数据
+    int ret = compress(zipFileData, &zipFileDataLen, [data bytes], [data length]);
+    
+    if (ret != Z_OK || zipFileDataLen == 0) {
+        
+        free(zipFileData);
+        
+        return nil;
+    }
+    
+    //组装压缩数据
+    NSData *zipFileNSData = [NSData dataWithBytes:zipFileData length:zipFileDataLen];
+    
+    //释放内存
+    free(zipFileData);
+    
+    zipFileData = NULL;
+    
+    return zipFileNSData;
+}
+
 + (void)uploadCrashLogFile {
     
     NSArray<NSString *> *fileList = [[[EBStoreManager sharedInstance] fileListOfPath:EBPathKey_SystemCrashFile] copy];
@@ -108,7 +148,9 @@ NSString* getAppInfo(void) {
         
         NSData *fileData = [[EBStoreManager sharedInstance] fileData:EBPathKey_SystemCrashFile fileName:fileName];
         
-        [[EBHttpNetwork sharedInstance] postFormData:fileData serverFile:@"crash" request:self.request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSData *zlibFileData = [self zlibCompressData:fileData];
+        
+        [[EBHttpNetwork sharedInstance] postFormData:zlibFileData serverFile:fileName request:self.request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                     
             if (!error) {
                 
@@ -237,8 +279,7 @@ void HandleException(NSException *exception) {
     [userInfo setObject:callStack forKey:UncaughtExceptionHandlerAddressesKey];
     
     NSException *excep = [NSException exceptionWithName:[exception name] reason:[exception reason] userInfo:userInfo];
-    
-    //在主线程中，执行制定的方法, withObject是执行方法传入的参数
+
     [[[EBUncaughtExceptionHandler alloc] init] performSelectorOnMainThread:@selector(handleException:) withObject:excep waitUntilDone:YES];
 }
 

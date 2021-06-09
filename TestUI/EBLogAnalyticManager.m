@@ -10,7 +10,6 @@
 #import "EBStoreManager.h"
 #import "EBThreadSafeArray.h"
 #include <zlib.h>
-#import "NSData+Compression.h"
 #import "EBHttpNetwork.h"
 #import "EBJSON.h"
 
@@ -70,7 +69,7 @@ static EBLogAnalyticManager *_instance = nil;
         
         _queue = dispatch_queue_create("ebscn_jyg_log_analytic_queue", DISPATCH_QUEUE_SERIAL);
         
-        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/log/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
+        _uploadUrl = [NSURL URLWithString:@"http://10.84.169.68:38888/eventLogSystem/collect/jsonFile/upload2?deviceId=99998&compress=zip"];
         
         _dateFormatter = [[NSDateFormatter alloc] init];
         
@@ -365,6 +364,8 @@ static EBLogAnalyticManager *_instance = nil;
     NSString *msg = [result objectForKey:@"msg"];
     
     if (code == 0) {
+    
+        NSLog(@"上传日志成功");
         
         if (success) {
             

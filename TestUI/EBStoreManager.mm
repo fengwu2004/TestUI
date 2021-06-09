@@ -29,7 +29,7 @@
     
     setting.fileName = fileName;
     
-    setting.ciperType = EBStoreCiperType_RC4;
+//    setting.ciperType = EBStoreCiperType_RC4;
     
     return setting;
 }
@@ -122,7 +122,7 @@ static EBStoreManager *_instance = nil;
         _pathSettings = @{
                         
             @(EBPathKey_SystemLogFile): EBMakePathSetting(@"/systemlog/", nil),
-            @(EBPathKey_SystemCrashFile): EBMakePathSetting(@"/systemcreash/", nil),
+            @(EBPathKey_SystemCrashFile): EBMakePathSetting(@"/systemcrash/", nil),
         };
     }
     
