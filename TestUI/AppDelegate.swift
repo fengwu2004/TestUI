@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        testLogs()
         
-        EBUncaughtExceptionHandler.uploadCrashLogFile()
+//        EBUncaughtExceptionHandler.uploadCrashLogFile()
         
         return true
     }
